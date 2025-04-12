@@ -3,6 +3,8 @@
 -- Host: 127.0.0.1    Database: bookstoredb
 -- ------------------------------------------------------
 -- Server version	8.0.41
+-- CREATE DATABASE bookstoredb;
+use bookstoredb;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -285,3 +287,51 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-04-11 15:56:54
+
+CREATE TABLE shipping_method (
+shipping_method_id INT AUTO_INCREMENT PRIMARY KEY,
+method_name VARCHAR(100)
+);
+
+ CREATE TABLE cust_order (
+order_id INT AUTO_INCREMENT PRIMARY KEY,
+customer_id INT,
+order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+shipping_method_id INT,
+FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+FOREIGN KEY (shipping_method_id) REFERENCES shipping_method(shipping_method_id)
+);
+
+ CREATE TABLE order_line (
+    order_line_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    book_id INT,
+    quantity INT,
+    unit_price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
+);
+
+CREATE TABLE order_status (
+    status_id INT AUTO_INCREMENT PRIMARY KEY,
+    status_description VARCHAR(50)
+);
+
+CREATE TABLE order_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    status_id INT,
+    status_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id),
+    FOREIGN KEY (status_id) REFERENCES order_status(status_id)
+);
+
+CREATE USER 'admin1'@'localhost' IDENTIFIED BY 'adminpass1';
+CREATE USER 'admin2'@'localhost' IDENTIFIED BY 'adminpass2';
+CREATE USER 'admin3'@'localhost' IDENTIFIED BY 'adminpass3';
+
+GRANT ALL PRIVILEGES ON bookstore_db.* TO 'admin1'@'localhost';
+GRANT ALL PRIVILEGES ON bookstore_db.* TO 'admin2'@'localhost';
+GRANT ALL PRIVILEGES ON bookstore_db.* TO 'admin3'@'localhost';
+
+FLUSH PRIVILEGES;
