@@ -3,7 +3,8 @@
 -- Host: 127.0.0.1    Database: bookstoredb
 -- ------------------------------------------------------
 -- Server version	8.0.41
--- CREATE DATABASE bookstoredb;
+CREATE DATABASE IF NOT EXISTS bookstoredb;
+ 
 use bookstoredb;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -288,12 +289,12 @@ UNLOCK TABLES;
 
 -- Dump completed on 2025-04-11 15:56:54
 
-CREATE TABLE shipping_method (
+CREATE TABLE IF NOT EXISTS shipping_method (
 shipping_method_id INT AUTO_INCREMENT PRIMARY KEY,
 method_name VARCHAR(100)
 );
 
- CREATE TABLE cust_order (
+ CREATE TABLE IF NOT EXISTS cust_order (
 order_id INT AUTO_INCREMENT PRIMARY KEY,
 customer_id INT,
 order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -302,7 +303,7 @@ FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 FOREIGN KEY (shipping_method_id) REFERENCES shipping_method(shipping_method_id)
 );
 
- CREATE TABLE order_line (
+ CREATE TABLE IF NOT EXISTS order_line (
     order_line_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
     book_id INT,
@@ -312,12 +313,12 @@ FOREIGN KEY (shipping_method_id) REFERENCES shipping_method(shipping_method_id)
     FOREIGN KEY (book_id) REFERENCES book(book_id)
 );
 
-CREATE TABLE order_status (
+CREATE TABLE IF NOT EXISTS order_status (
     status_id INT AUTO_INCREMENT PRIMARY KEY,
     status_description VARCHAR(50)
 );
 
-CREATE TABLE order_history (
+CREATE TABLE IF NOT EXISTS order_history (
     history_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
     status_id INT,
@@ -326,12 +327,12 @@ CREATE TABLE order_history (
     FOREIGN KEY (status_id) REFERENCES order_status(status_id)
 );
 
-CREATE USER 'admin1'@'localhost' IDENTIFIED BY 'adminpass1';
-CREATE USER 'admin2'@'localhost' IDENTIFIED BY 'adminpass2';
-CREATE USER 'admin3'@'localhost' IDENTIFIED BY 'adminpass3';
+CREATE USER 'admin1'@'%' IDENTIFIED BY 'adminpass1';
+CREATE USER 'admin2'@'%' IDENTIFIED BY 'adminpass2';
+CREATE USER 'admin3'@'%' IDENTIFIED BY 'adminpass3';
 
-GRANT ALL PRIVILEGES ON bookstore_db.* TO 'admin1'@'localhost';
-GRANT ALL PRIVILEGES ON bookstore_db.* TO 'admin2'@'localhost';
-GRANT ALL PRIVILEGES ON bookstore_db.* TO 'admin3'@'localhost';
+GRANT ALL PRIVILEGES ON bookstoredb.* TO 'admin1'@'%';
+GRANT ALL PRIVILEGES ON bookstoredb.* TO 'admin2'@'%';
+GRANT ALL PRIVILEGES ON bookstoredb.* TO 'admin3'@'%';
 
 FLUSH PRIVILEGES;
